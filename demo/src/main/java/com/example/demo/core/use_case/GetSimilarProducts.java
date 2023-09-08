@@ -19,15 +19,19 @@ public class GetSimilarProducts {
     }
 
     public Response execute(Request request) {
-        Set<String> similarProductIDs = productRepository.getSimilarProductIDs(request.getProductId());
-        Set<Product> similarProducts = getSimilarProducts(similarProductIDs);
+        Set<String> similarProductIds = findSimilarProductsIds(request);
+        Set<Product> similarProducts = mapSimilarProducts(similarProductIds);
 
         return new Response(similarProducts);
     }
 
-    private Set<Product> getSimilarProducts(Set<String> similarProductIDs) {
-        return similarProductIDs.stream()
-                .map(productRepository::getProduct)
+    private Set<String> findSimilarProductsIds(Request request) {
+        return productRepository.findSimilarProductIds(request.getProductId());
+    }
+
+    private Set<Product> mapSimilarProducts(Set<String> similarProductIds) {
+        return similarProductIds.stream()
+                .map(productRepository::findProductById)
                 .collect(Collectors.toSet());
     }
 

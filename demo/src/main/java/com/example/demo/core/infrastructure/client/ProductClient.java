@@ -11,8 +11,8 @@ import java.util.Set;
 public interface ProductClient {
 
     @GetMapping("/product/{productId}/similarids")
-    Set<String> getSimilarProductIDs(@PathVariable String productId);
+    Set<String> findSimilarProductIDs(@PathVariable String productId);
 
     @GetMapping("/product/{productId}")
-    Product getProduct(@PathVariable String productId);
+    Product findProductById(@PathVariable String productId);
 }

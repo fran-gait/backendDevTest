@@ -1,6 +1,6 @@
 package com.example.demo.http;
 
-import com.example.demo.exception.HttpCallException;
+import com.example.demo.exception.InternalErrorException;
 import com.example.demo.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(HttpCallException.class)
-    public ResponseEntity<String> handleHttpCallException(HttpCallException ex) {
+    @ExceptionHandler(InternalErrorException.class)
+    public ResponseEntity<String> handleHttpCallException(InternalErrorException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
     }
 

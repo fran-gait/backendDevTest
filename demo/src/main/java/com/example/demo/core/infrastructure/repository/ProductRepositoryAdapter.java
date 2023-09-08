@@ -3,15 +3,17 @@ package com.example.demo.core.infrastructure.repository;
 import com.example.demo.core.domain.Product;
 import com.example.demo.core.domain.ProductRepository;
 import com.example.demo.core.infrastructure.client.ProductClient;
-import com.example.demo.exception.HttpCallException;
+import com.example.demo.exception.InternalErrorException;
 import com.example.demo.exception.ProductNotFoundException;
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Repository("productRepository")
 public class ProductRepositoryAdapter implements ProductRepository {
 
@@ -22,10 +24,10 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public Set<String> getSimilarProductIDs(String productId) {
+    public Set<String> findSimilarProductIds(String productId) {
         Set<String> similarProductIDs = new HashSet<>();
         try {
-            similarProductIDs = productClient.getSimilarProductIDs(productId);
+            similarProductIDs = productClient.findSimilarProductIDs(productId);
         } catch (FeignException feignClientException) {
             handleFeignException(feignClientException);
         }
@@ -33,10 +35,10 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public Product getProduct(String productId) {
+    public Product findProductById(String productId) {
         Product product = Product.builder().build();
         try {
-            product = productClient.getProduct(productId);
+            product = productClient.findProductById(productId);
         } catch (FeignException feignException) {
             handleFeignException(feignException);
         }
@@ -44,9 +46,10 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     private static void handleFeignException(FeignException feignException) {
+        log.error("Error when: {}", feignException.getMessage());
         if (HttpStatus.NOT_FOUND.value() == feignException.status()) {
             throw new ProductNotFoundException();
         }
-        throw new HttpCallException(feignException.status(), feignException.getMessage());
+        throw new InternalErrorException(feignException.status(), feignException.getMessage());
     }
 }
