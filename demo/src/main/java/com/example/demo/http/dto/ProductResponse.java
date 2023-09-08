@@ -11,7 +11,7 @@ public class ProductResponse {
     @JsonProperty("name")
     private String name;
     @JsonProperty("price")
-    private Number price;
+    private double price;
     @JsonProperty("availability")
     private boolean availability;
 }

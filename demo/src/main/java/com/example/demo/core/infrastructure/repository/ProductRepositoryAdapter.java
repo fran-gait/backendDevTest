@@ -27,10 +27,11 @@ public class ProductRepositoryAdapter implements ProductRepository {
     public Set<String> findSimilarProductIds(String productId) {
         Set<String> similarProductIDs = new HashSet<>();
         try {
-            similarProductIDs = productClient.findSimilarProductIDs(productId);
+            similarProductIDs = productClient.findSimilarProductIds(productId);
         } catch (FeignException feignClientException) {
             handleFeignException(feignClientException);
         }
+        log.info("Similar Products:{} by id:{}", similarProductIDs, productId);
         return similarProductIDs;
     }
 
@@ -42,11 +43,12 @@ public class ProductRepositoryAdapter implements ProductRepository {
         } catch (FeignException feignException) {
             handleFeignException(feignException);
         }
+        log.info("Product:{}", product);
         return product;
     }
 
     private static void handleFeignException(FeignException feignException) {
-        log.error("Error when: {}", feignException.getMessage());
+        log.error("Error when:{}", feignException.getMessage());
         if (HttpStatus.NOT_FOUND.value() == feignException.status()) {
             throw new ProductNotFoundException();
         }
