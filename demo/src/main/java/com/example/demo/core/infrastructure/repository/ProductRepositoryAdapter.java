@@ -31,6 +31,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
         } catch (FeignException feignClientException) {
             handleFeignException(feignClientException);
         }
+
         log.info("Similar Products:{} by id:{}", similarProductIDs, productId);
         return similarProductIDs;
     }
@@ -43,6 +44,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
         } catch (FeignException feignException) {
             handleFeignException(feignException);
         }
+
         log.info("Product:{}", product);
         return product;
     }
